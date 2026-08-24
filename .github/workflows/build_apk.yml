@@ -25,11 +25,8 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Auto Repair Android Project Scaffolding
-        run: |
-          flutter create . --platforms=android --org=com.example
-          sed -i '/classpath.*gradle/a \        classpath "com.google.gms:google-services:4.4.1"' android/build.gradle
-          echo "apply plugin: 'com.google.gms.google-services'" >> android/app/build.gradle
+      - name: Auto Repair Android Scaffolding
+        run: flutter create . --platforms=android --org=com.example
 
       - name: Install Dependencies
         run: flutter pub get
