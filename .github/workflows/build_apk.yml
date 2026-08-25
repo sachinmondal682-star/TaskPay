@@ -30,10 +30,10 @@ jobs:
       - name: Auto Repair Android Scaffolding & Inject Firebase
         run: |
           flutter create . --platforms=android --org=com.example
-          # Inject Google Services classpath into project build.gradle
-          sed -i '/dependencies {/a \        classpath "com.google.gms:google-services:4.4.2"' android/build.gradle
-          # Apply Google Services plugin at the end of app build.gradle
-          echo 'apply plugin: "com.google.gms.google-services"' >> android/app/build.gradle
+          
+          # Inject Google Services into Kotlin DSL (.kts) files
+          sed -i '/plugins {/a \    id("com.google.gms.google-services") version "4.4.2" apply false' android/settings.gradle.kts
+          sed -i '/plugins {/a \    id("com.google.gms.google-services")' android/app/build.gradle.kts
 
       - name: Auto Increment Version
         run: |
