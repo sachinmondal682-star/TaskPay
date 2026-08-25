@@ -28,17 +28,35 @@ jobs:
       - name: Auto Repair Android Scaffolding
         run: flutter create . --platforms=android --org=com.example
 
+      - name: Create Permanent Fixed Keystore
+        run: |
+          mkdir -p ~/.android
+          keytool -genkeypair -v \
+            -keystore ~/.android/debug.keystore \
+            -storepass android \
+            -alias androiddebugkey \
+            -keypass android \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -dname "CN=Android Debug,O=Android,C=US"
+
+      - name: Auto Increment Version
+        run: |
+          BUILD_NUM=$(date +%s)
+          sed -i "s/version: .*/version: 1.0.$BUILD_NUM+$BUILD_NUM/" pubspec.yaml
+
       - name: Install Dependencies
         run: flutter pub get
 
       - name: Build Debug APK
         run: flutter build apk --debug
 
-      - name: Print Exact APK SHA-1
+      - name: Print Permanent APK SHA-1
         run: |
-          echo "==================== REAL APK SHA-1 ===================="
+          echo "==================== PERMANENT APK SHA-1 ===================="
           $ANDROID_HOME/build-tools/34.0.0/apksigner verify --print-certs build/app/outputs/flutter-apk/app-debug.apk
-          echo "========================================================"
+          echo "============================================================="
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
