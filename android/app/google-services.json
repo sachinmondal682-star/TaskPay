@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "411220621839",
+    "project_id": "paisa-loots",
+    "storage_bucket": "paisa-loots.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:411220621839:android:1b1e610f1369fb1bb2c17a",
+        "android_client_info": {
+          "package_name": "com.example.paisa_loots"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "411220621839-2q84jlqbta6j916bluq3074hvsps98kp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.paisa_loots",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "411220621839-oalmi65mt66eve831m1okr92pkjcoj5s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4dSwK5l-mFfXmU5thcTIgLJzy7jh8Nl8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "411220621839-oalmi65mt66eve831m1okr92pkjcoj5s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
