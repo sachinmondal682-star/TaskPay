@@ -14,19 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "411220621839-2q84jlqbta6j916bluq3074hvsps98kp.apps.googleusercontent.com",
+          "client_id": "411220621839-9poctc8iq3oidjlakkb323ibf09tk7dd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.paisa_loots",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
-          }
-        },
-        {
-          "client_id": "411220621839-4caito1fof027o2knd9ftebgc5l4qtuo.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.paisa_loots",
-            "certificate_hash": "a4697ac4ad42c703fc646d3bd879cfd089dab0b8"
+            "certificate_hash": "22db6d4b21c9d5bab6f1083dee1f06730d49486e"
           }
         },
         {
