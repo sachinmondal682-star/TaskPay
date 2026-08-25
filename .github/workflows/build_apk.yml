@@ -27,8 +27,13 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Auto Repair Android Scaffolding
-        run: flutter create . --platforms=android --org=com.example
+      - name: Auto Repair Android Scaffolding & Inject Firebase
+        run: |
+          flutter create . --platforms=android --org=com.example
+          # Inject Google Services classpath into project build.gradle
+          sed -i '/dependencies {/a \        classpath "com.google.gms:google-services:4.4.2"' android/build.gradle
+          # Apply Google Services plugin at the end of app build.gradle
+          echo 'apply plugin: "com.google.gms.google-services"' >> android/app/build.gradle
 
       - name: Auto Increment Version
         run: |
