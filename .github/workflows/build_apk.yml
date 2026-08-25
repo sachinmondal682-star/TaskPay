@@ -37,7 +37,7 @@ jobs:
       - name: Print Exact APK SHA-1
         run: |
           echo "==================== REAL APK SHA-1 ===================="
-          keytool -printcert -jarfile build/app/outputs/flutter-apk/app-debug.apk
+          $ANDROID_HOME/build-tools/34.0.0/apksigner verify --print-certs build/app/outputs/flutter-apk/app-debug.apk
           echo "========================================================"
 
       - name: Upload APK
@@ -45,3 +45,4 @@ jobs:
         with:
           name: PaisaLoots-App-Release
           path: build/app/outputs/flutter-apk/app-debug.apk
+          
