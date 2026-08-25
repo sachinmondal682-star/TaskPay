@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "411220621839-4caito1fof027o2knd9ftebgc5l4qtuo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.paisa_loots",
+            "certificate_hash": "a4697ac4ad42c703fc646d3bd879cfd089dab0b8"
+          }
+        },
+        {
           "client_id": "411220621839-oalmi65mt66eve831m1okr92pkjcoj5s.apps.googleusercontent.com",
           "client_type": 3
         }
