@@ -17,6 +17,8 @@ class AuthWrapper extends StatefulWidget {
 class _AuthWrapperState extends State<AuthWrapper> {
   final _storage = const FlutterSecureStorage();
 
+  static const String appVersion = "v1.0.1 (Build 2)";
+
   // Integrated Web Client ID
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     serverClientId: '411220621839-oalmi65mt66eve831m1okr92pkjcoj5s.apps.googleusercontent.com',
@@ -174,7 +176,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
       );
     }
 
-    // SCREEN 1: Registration Completion Card (Responsive Center)
+    // SCREEN 1: Registration Completion Card
     if (_needsRegistrationForm) {
       return Scaffold(
         backgroundColor: const Color(0xFFF8F9FA),
@@ -184,85 +186,94 @@ class _AuthWrapperState extends State<AuthWrapper> {
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 440),
-                child: Container(
-                  padding: const EdgeInsets.all(28),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 20, offset: const Offset(0, 8)),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(28),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(24),
+                        boxShadow: [
+                          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 20, offset: const Offset(0, 8)),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFF6B00).withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(12),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFFF6B00).withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(Icons.person_add_alt_1_rounded, color: Color(0xFFFF6B00), size: 28),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.close, color: Colors.grey),
+                                onPressed: _handleLogout,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          const Text('Complete Profile', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 6),
+                          Text('Verify account for rewards & instant payouts.', style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
+                          const SizedBox(height: 24),
+                          TextField(
+                            controller: _nameController,
+                            decoration: InputDecoration(
+                              labelText: 'Full Name *',
+                              prefixIcon: const Icon(Icons.badge_outlined),
+                              filled: true,
+                              fillColor: Colors.grey.shade50,
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
                             ),
-                            child: const Icon(Icons.person_add_alt_1_rounded, color: Color(0xFFFF6B00), size: 28),
                           ),
-                          IconButton(
-                            icon: const Icon(Icons.close, color: Colors.grey),
-                            onPressed: _handleLogout,
+                          const SizedBox(height: 16),
+                          TextField(
+                            controller: _phoneController,
+                            keyboardType: TextInputType.phone,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(10),
+                            ],
+                            decoration: InputDecoration(
+                              labelText: 'Phone Number *',
+                              prefixText: '+91  ',
+                              prefixIcon: const Icon(Icons.phone_android_rounded),
+                              filled: true,
+                              fillColor: Colors.grey.shade50,
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                            ),
+                          ),
+                          const SizedBox(height: 28),
+                          SizedBox(
+                            height: 52,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFFF6B00),
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                              ),
+                              onPressed: _isSubmitting ? null : _handleCompleteRegistration,
+                              child: _isSubmitting
+                                  ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5))
+                                  : const Text('Submit & Create Account', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
-                      const Text('Complete Profile', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 6),
-                      Text('Verify account for rewards & instant payouts.', style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
-                      const SizedBox(height: 24),
-                      TextField(
-                        controller: _nameController,
-                        decoration: InputDecoration(
-                          labelText: 'Full Name *',
-                          prefixIcon: const Icon(Icons.badge_outlined),
-                          filled: true,
-                          fillColor: Colors.grey.shade50,
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      TextField(
-                        controller: _phoneController,
-                        keyboardType: TextInputType.phone,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(10),
-                        ],
-                        decoration: InputDecoration(
-                          labelText: 'Phone Number *',
-                          prefixText: '+91  ',
-                          prefixIcon: const Icon(Icons.phone_android_rounded),
-                          filled: true,
-                          fillColor: Colors.grey.shade50,
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
-                        ),
-                      ),
-                      const SizedBox(height: 28),
-                      SizedBox(
-                        height: 52,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFFF6B00),
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                          ),
-                          onPressed: _isSubmitting ? null : _handleCompleteRegistration,
-                          child: _isSubmitting
-                              ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5))
-                              : const Text('Submit & Create Account', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 18),
+                    const Text(
+                      appVersion,
+                      style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w600),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -271,7 +282,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
       );
     }
 
-    // SCREEN 2: Google Sign-In Card (Middle Center)
+    // SCREEN 2: Google Sign-In Card
     if (_userRole == null) {
       return Scaffold(
         backgroundColor: const Color(0xFFF8F9FA),
@@ -281,54 +292,63 @@ class _AuthWrapperState extends State<AuthWrapper> {
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 420),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 36),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(28),
-                    boxShadow: [
-                      BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 24, offset: const Offset(0, 10)),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFF6B00).withOpacity(0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.account_balance_wallet_rounded, size: 56, color: Color(0xFFFF6B00)),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 36),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(28),
+                        boxShadow: [
+                          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 24, offset: const Offset(0, 10)),
+                        ],
                       ),
-                      const SizedBox(height: 24),
-                      const Text('Paisa Loots', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800)),
-                      const SizedBox(height: 8),
-                      Text('Complete tasks & earn daily rewards', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey.shade600, fontSize: 14)),
-                      const SizedBox(height: 36),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 52,
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.black87,
-                            side: BorderSide(color: Colors.grey.shade300, width: 1.2),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFF6B00).withOpacity(0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.account_balance_wallet_rounded, size: 56, color: Color(0xFFFF6B00)),
                           ),
-                          onPressed: _handleGoogleSignIn,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Icon(Icons.g_mobiledata_rounded, size: 34, color: Color(0xFFFF6B00)),
-                              SizedBox(width: 8),
-                              Text('Continue with Google', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
-                            ],
+                          const SizedBox(height: 24),
+                          const Text('Paisa Loots', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800)),
+                          const SizedBox(height: 8),
+                          Text('Complete tasks & earn daily rewards', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey.shade600, fontSize: 14)),
+                          const SizedBox(height: 36),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 52,
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: Colors.black87,
+                                side: BorderSide(color: Colors.grey.shade300, width: 1.2),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                              ),
+                              onPressed: _handleGoogleSignIn,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Icon(Icons.g_mobiledata_rounded, size: 34, color: Color(0xFFFF6B00)),
+                                  SizedBox(width: 8),
+                                  Text('Continue with Google', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 18),
+                    const Text(
+                      appVersion,
+                      style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w600),
+                    ),
+                  ],
                 ),
               ),
             ),
