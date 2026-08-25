@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout Code
@@ -28,19 +30,6 @@ jobs:
       - name: Auto Repair Android Scaffolding
         run: flutter create . --platforms=android --org=com.example
 
-      - name: Create Permanent Fixed Keystore
-        run: |
-          mkdir -p ~/.android
-          keytool -genkeypair -v \
-            -keystore ~/.android/debug.keystore \
-            -storepass android \
-            -alias androiddebugkey \
-            -keypass android \
-            -keyalg RSA \
-            -keysize 2048 \
-            -validity 10000 \
-            -dname "CN=Android Debug,O=Android,C=US"
-
       - name: Auto Increment Version
         run: |
           BUILD_NUM=$(date +%s)
@@ -50,17 +39,22 @@ jobs:
         run: flutter pub get
 
       - name: Build Debug APK
-        run: flutter build apk --debug
-
-      - name: Print Permanent APK SHA-1
         run: |
-          echo "==================== PERMANENT APK SHA-1 ===================="
-          $ANDROID_HOME/build-tools/34.0.0/apksigner verify --print-certs build/app/outputs/flutter-apk/app-debug.apk
-          echo "============================================================="
+          flutter build apk --debug
+          cp build/app/outputs/flutter-apk/app-debug.apk PaisaLoots.apk
 
-      - name: Upload APK
+      - name: Create Direct APK Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: PaisaLoots App Build #${{ github.run_number }}
+          files: PaisaLoots.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: PaisaLoots-App-Release
-          path: build/app/outputs/flutter-apk/app-debug.apk
+          path: PaisaLoots.apk
           
