@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'admin_panel_screen.dart';
 import 'user_dashboard_screen.dart';
 import '../services/api_service.dart';
@@ -18,12 +18,6 @@ class _AuthWrapperState extends State<AuthWrapper> {
   final _storage = const FlutterSecureStorage();
 
   static const String appVersion = "v1.0.1 (Build 2)";
-
-  // Integrated Web Client ID
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    serverClientId: '411220621839-oalmi65mt66eve831m1okr92pkjcoj5s.apps.googleusercontent.com',
-    scopes: ['email', 'profile'],
-  );
 
   bool _isLoading = true;
   String? _userRole;
@@ -80,31 +74,39 @@ class _AuthWrapperState extends State<AuthWrapper> {
   Future<void> _handleGoogleSignIn() async {
     setState(() => _isLoading = true);
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
+      // Web-based Google Auth Provider (Zero SHA-1 Dependency)
+      GoogleAuthProvider googleProvider = GoogleAuthProvider();
+      googleProvider.addScope('email');
+      googleProvider.addScope('profile');
+
+      final UserCredential userCredential = 
+          await FirebaseAuth.instance.signInWithProvider(googleProvider);
+      
+      final user = userCredential.user;
+      if (user == null || user.email == null) {
         setState(() => _isLoading = false);
         return;
       }
 
       final response = await ApiService.dio.post('/api/v1/auth/check-user', data: {
-        'email': googleUser.email,
+        'email': user.email,
       });
 
       if (response.data['status'] == 'success') {
         if (response.data['is_registered'] == true) {
           final token = response.data['data']['token'];
-          final user = response.data['data']['user'];
+          final userData = response.data['data']['user'];
           await _storage.write(key: 'jwt_token', value: token);
 
           setState(() {
-            _userRole = user['role'];
+            _userRole = userData['role'];
             _needsRegistrationForm = false;
             _isLoading = false;
           });
         } else {
-          _tempGoogleEmail = googleUser.email;
-          _tempGoogleId = googleUser.id;
-          _nameController.text = googleUser.displayName ?? '';
+          _tempGoogleEmail = user.email;
+          _tempGoogleId = user.uid;
+          _nameController.text = user.displayName ?? '';
 
           setState(() {
             _needsRegistrationForm = true;
@@ -159,7 +161,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
 
   Future<void> _handleLogout() async {
     await _storage.deleteAll();
-    await _googleSignIn.signOut();
+    await FirebaseAuth.instance.signOut();
     setState(() {
       _userRole = null;
       _needsRegistrationForm = false;
