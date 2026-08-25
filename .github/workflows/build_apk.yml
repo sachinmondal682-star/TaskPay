@@ -28,15 +28,17 @@ jobs:
       - name: Auto Repair Android Scaffolding
         run: flutter create . --platforms=android --org=com.example
 
-      - name: Generate Fixed Keystore
-        run: |
-          keytool -genkey -v -keystore android/app/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
-
       - name: Install Dependencies
         run: flutter pub get
 
-      - name: Build APK with Fixed Keystore
+      - name: Build Debug APK
         run: flutter build apk --debug
+
+      - name: Print Exact APK SHA-1
+        run: |
+          echo "==================== REAL APK SHA-1 ===================="
+          keytool -printcert -jarfile build/app/outputs/flutter-apk/app-debug.apk
+          echo "========================================================"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
